@@ -92,6 +92,15 @@ class _PlaylisttoaddsongState extends State<Playlisttoaddsong> {
                                 onPressed: () {
                                   widget.playlist
                                       .deletedata(songplaylist[index].id);
+                                  const removesongplaylistsnake = SnackBar(
+                                      backgroundColor:
+                                          Color.fromARGB(222, 38, 46, 67),
+                                      duration: Duration(seconds: 1),
+                                      content: Center(
+                                          child: Text(
+                                              'Music Removed In Playlist')));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(removesongplaylistsnake);
                                 },
                                 icon: const Icon(Icons.delete_outline,
                                     color: Color.fromARGB(255, 224, 86, 76))),

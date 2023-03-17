@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:myapp/allmusic/allmusiclist_tile.dart';
-import 'package:myapp/functions/fav_functions.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -52,8 +51,8 @@ class _AllsongsWidgetState extends State<AllsongsWidget> {
             child: Text('No songs'),
           );
         }
+
         startsong = item.data!;
-        FavoriteDB.isintialized(item.data!);
         return Allmusiclisttile(
           songmodel: item.data!,
         );

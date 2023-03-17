@@ -1,15 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:myapp/allmusic/allmusic.dart';
+import 'package:myapp/controller/get_allsongs_controler.dart';
+import 'package:myapp/page-1/recentlyplayed/recently_screen.dart';
+import 'package:myapp/page-1/widget/miniplayer.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   @override
-  State<HomePage> createState() => _HomePageState();
-}
+  bool a = false;
 
-class _HomePageState extends State<HomePage> {
   int bottomnavindexnum = 0;
+
   List<Widget> tabbarwidget = const [AllsongsWidget()];
 
   @override
@@ -45,7 +45,13 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          RecentlyScreen())));
+                            },
                             icon: const Icon(Icons.history_toggle_off_rounded),
                             color: Colors.white,
                           ),
@@ -68,6 +74,13 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w500)),
                 ),
                 Expanded(child: tabbarwidget[bottomnavindexnum]),
+                (Getallsongs.audioPlayer.currentIndex != null)
+                    ? MiniPlayer()
+                    : Container(),
+                Container(
+                  height: 55,
+                  width: 20,
+                )
               ],
             ),
           ),

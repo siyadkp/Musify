@@ -1,19 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:myapp/allmusic/allmusic.dart';
+import 'package:myapp/bottomnavigation_page/bottomnavigation_page.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
 import 'package:myapp/functions/fav_functions.dart';
 import 'package:myapp/page-1/playnow/artwork_widget.dart';
 import 'package:myapp/page-1/playnow/player_controler.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
+import '../../allmusic/allmusiclist_tile.dart';
+
 // ignore: must_be_immutable
 class PlayNowPage extends StatefulWidget {
   final List<SongModel> songsModel;
-  int count = 0;
+  final int count;
 
   PlayNowPage({
     super.key,
     required this.songsModel,
-    required this.count,
+    this.count = 0,
   });
 
   @override
@@ -21,6 +27,7 @@ class PlayNowPage extends StatefulWidget {
 }
 
 class _PlayNowPageState extends State<PlayNowPage> {
+  late StreamSubscription<Duration> _positionSubscription;
   Duration _duration = const Duration();
   Duration _position = const Duration();
   int large = 0;
@@ -52,11 +59,10 @@ class _PlayNowPageState extends State<PlayNowPage> {
   playsongs() {
     Getallsongs.audioPlayer.play();
     Getallsongs.audioPlayer.durationStream.listen((D) {
-      setState(() {
-        _duration = D!;
-      });
+      _duration = D!;
     });
-    Getallsongs.audioPlayer.positionStream.listen((P) {
+
+    _positionSubscription = Getallsongs.audioPlayer.positionStream.listen((P) {
       setState(() {
         _position = P;
       });
@@ -70,12 +76,13 @@ class _PlayNowPageState extends State<PlayNowPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.deepPurple[200],
+      body: SafeArea(
+        child: Column(
           children: [
             Container(
-              height: 500,
+              height: MediaQuery.of(context).size.height * .609,
               width: 500,
               color: Colors.deepPurple[200],
               child: Align(
@@ -89,15 +96,100 @@ class _PlayNowPageState extends State<PlayNowPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BottomNavigationPage()),
+                                (Route route) => false);
+                          },
                           icon: const Icon(Icons.keyboard_arrow_down_sharp),
                           color: Colors.white,
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.more_vert_outlined),
-                          color: Colors.white,
-                        )
+                        PopupMenuButton(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          icon: const Icon(
+                            Icons.more_vert,
+                            size: 20,
+                          ),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 1,
+                              child: Container(
+                                child: const Text(
+                                  'Add playlist',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text(
+                                FavoriteDB.isFavor(
+                                        widget.songsModel[currentindex])
+                                    ? 'Remove Favorites'
+                                    : 'Add Favorites',
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 39, 33, 55),
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                                child: Container(child: const Text('Share'))),
+                            const PopupMenuItem(
+                              child: Text('Song Info'),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == 1) {
+                              showPlaylistdialog(
+                                  context, startsong[currentindex]);
+                            } else if (value == 2) {
+                              if (FavoriteDB.isFavor(
+                                  widget.songsModel[currentindex])) {
+                                FavoriteDB.delete(
+                                    widget.songsModel[currentindex].id);
+                                const remove = SnackBar(
+                                  backgroundColor:
+                                      Color.fromARGB(222, 38, 46, 67),
+                                  content: Center(
+                                    child: Text(
+                                      'Song Removed In Favorate List',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white70),
+                                    ),
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(remove);
+                              } else {
+                                FavoriteDB.add(widget.songsModel[currentindex]);
+                                const add = SnackBar(
+                                  backgroundColor:
+                                      Color.fromARGB(222, 38, 46, 67),
+                                  content: Center(
+                                      child: Center(
+                                    child: Text(
+                                      'Song Added In Favorate List',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white70),
+                                    ),
+                                  )),
+                                  duration: Duration(seconds: 2),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(add);
+                              }
+                              FavoriteDB.favoriteSongs.notifyListeners();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ],
@@ -105,7 +197,7 @@ class _PlayNowPageState extends State<PlayNowPage> {
               ),
             ),
             Container(
-              height: 288,
+              height: MediaQuery.of(context).size.height * .3509,
               color: Colors.deepPurple[200],
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -130,6 +222,7 @@ class _PlayNowPageState extends State<PlayNowPage> {
                                         child: Text(
                                           widget.songsModel[currentindex]
                                               .displayNameWOExt,
+                                          maxLines: 1,
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -279,5 +372,12 @@ class _PlayNowPageState extends State<PlayNowPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _positionSubscription?.cancel();
   }
 }

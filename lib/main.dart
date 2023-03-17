@@ -4,9 +4,12 @@ import 'package:myapp/model/model.dart';
 import 'package:myapp/page-1/splash.dart';
 import 'package:myapp/provider/provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   if (!Hive.isAdapterRegistered(PlayermodelAdapter().typeId)) {
     Hive.registerAdapter(PlayermodelAdapter());
     await Hive.initFlutter();

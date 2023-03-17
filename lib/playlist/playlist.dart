@@ -73,100 +73,113 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                             Hive.box<Playermodel>('playlistDb').listenable(),
                         builder: (BuildContext context,
                             Box<Playermodel> musiclist, Widget? child) {
-                          return ListView.builder(
-                            itemCount: musiclist.length,
-                            itemBuilder: (context, index) {
-                              final data = musiclist.values.toList()[index];
-                              return Slidable(
-                                endActionPane: ActionPane(
-                                  motion: const BehindMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      spacing: 0,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      onPressed: (context) {
-                                        DeletePlaylist(
-                                            context, musiclist, index);
-                                      },
-                                      icon: Icons.delete_outline,
-                                      foregroundColor: Colors.red,
-                                      backgroundColor: Colors.transparent,
-                                    ),
-                                    SlidableAction(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      onPressed: (context) {
-                                        EditPlaylistName(context, data, index);
-                                      },
-                                      icon: Icons.edit,
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Colors.transparent,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 20),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: const DecorationImage(
-                                          fit: BoxFit.cover,
-                                          colorFilter: ColorFilter.matrix([
-                                            0.5, 0, 0, 0, 0, // red
-                                            0, 0.5, 0, 0, 0, // green
-                                            0, 0, 0.5, 0, 0, // blue
-                                            0, 0, 0, 1, 0, // alpha
-                                          ]),
-                                          image: AssetImage(
-                                            'assets/page-1/images/pexels-photo-3756766.jpeg',
-                                          ),
-                                        ),
-                                        color: const Color.fromARGB(
-                                            255, 29, 29, 45),
-                                        borderRadius: BorderRadius.circular(15),
-                                        border:
-                                            Border.all(color: Colors.white30)),
-                                    child: ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                Playlisttoaddsong(
-                                                    sindex: index,
-                                                    playlist: data),
-                                          ),
-                                        );
-                                      },
-                                      leading: const Icon(
-                                        Icons.music_note_outlined,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
+                          if (musiclist.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 300, left: 120),
+                              child: Text(
+                                'Add playlist',
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 25),
+                              ),
+                            );
+                          } else {
+                            return ListView.builder(
+                              itemCount: musiclist.length,
+                              itemBuilder: (context, index) {
+                                final data = musiclist.values.toList()[index];
+                                return Slidable(
+                                  endActionPane: ActionPane(
+                                    motion: const BehindMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        spacing: 0,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        onPressed: (context) {
+                                          DeletePlaylist(
+                                              context, musiclist, index);
+                                        },
+                                        icon: Icons.delete_outline,
+                                        foregroundColor: Colors.red,
+                                        backgroundColor: Colors.transparent,
                                       ),
-                                      title: Text(
-                                        data.name,
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
+                                      SlidableAction(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        onPressed: (context) {
+                                          EditPlaylistName(
+                                              context, data, index);
+                                        },
+                                        icon: Icons.edit,
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          image: const DecorationImage(
+                                            fit: BoxFit.cover,
+                                            colorFilter: ColorFilter.matrix([
+                                              0.5, 0, 0, 0, 0, // red
+                                              0, 0.5, 0, 0, 0, // green
+                                              0, 0, 0.5, 0, 0, // blue
+                                              0, 0, 0, 1, 0, // alpha
+                                            ]),
+                                            image: AssetImage(
+                                              'assets/page-1/images/pexels-photo-3756766.jpeg',
+                                            ),
+                                          ),
+                                          color: const Color.fromARGB(
+                                              255, 29, 29, 45),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: Colors.white30)),
+                                      child: ListTile(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Playlisttoaddsong(
+                                                      sindex: index,
+                                                      playlist: data),
+                                            ),
+                                          );
+                                        },
+                                        leading: const Icon(
+                                          Icons.music_note_outlined,
                                           color: Color.fromARGB(
                                               255, 255, 255, 255),
                                         ),
-                                      ),
-                                      trailing: IconButton(
-                                        tooltip: 'Drag Left',
-                                        icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.white,
+                                        title: Text(
+                                          data.name,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
                                         ),
-                                        onPressed: () {},
+                                        trailing: IconButton(
+                                          tooltip: 'Drag Left',
+                                          icon: const Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {},
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
                     ),
@@ -201,7 +214,6 @@ Future<dynamic> EditPlaylistName(
           child: Text(
             "Edit Playlist '${data.name}'",
             style: const TextStyle(
-                fontFamily: 'poppins',
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -219,7 +231,8 @@ Future<dynamic> EditPlaylistName(
               maxLength: 15,
               decoration: InputDecoration(
                   counterStyle: const TextStyle(
-                      color: Colors.white, fontFamily: 'poppins'),
+                    color: Colors.white,
+                  ),
                   fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   border: OutlineInputBorder(
@@ -227,7 +240,6 @@ Future<dynamic> EditPlaylistName(
                       borderRadius: BorderRadius.circular(10)),
                   contentPadding: const EdgeInsets.only(left: 15, top: 5)),
               style: const TextStyle(
-                  fontFamily: 'poppins',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -255,7 +267,6 @@ Future<dynamic> EditPlaylistName(
               child: const Text(
                 'Cancel',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Colors.purpleAccent,
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
@@ -278,7 +289,6 @@ Future<dynamic> EditPlaylistName(
               child: const Text(
                 'Update',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Colors.purpleAccent,
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
@@ -300,10 +310,14 @@ Future<dynamic> DeletePlaylist(
         backgroundColor: Color.fromARGB(255, 52, 6, 105),
         title: const Text(
           'Delete Playlist',
-          style: TextStyle(color: Colors.white, fontFamily: 'poppins'),
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
         content: const Text('Are you sure you want to delete this playlist?',
-            style: TextStyle(color: Colors.white, fontFamily: 'poppins')),
+            style: TextStyle(
+              color: Colors.white,
+            )),
         actions: [
           TextButton(
             onPressed: () {
@@ -311,7 +325,8 @@ Future<dynamic> DeletePlaylist(
             },
             child: const Text('No',
                 style: TextStyle(
-                    color: Colors.purpleAccent, fontFamily: 'poppins')),
+                  color: Colors.purpleAccent,
+                )),
           ),
           TextButton(
             onPressed: () {
@@ -329,7 +344,8 @@ Future<dynamic> DeletePlaylist(
             },
             child: const Text('Yes',
                 style: TextStyle(
-                    color: Colors.purpleAccent, fontFamily: 'poppins')),
+                  color: Colors.purpleAccent,
+                )),
           ),
         ],
       );
@@ -349,7 +365,6 @@ Future newplaylist(BuildContext context, _formKey) {
           child: Text(
             'New to Playlist',
             style: TextStyle(
-                fontFamily: 'poppins',
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -366,8 +381,9 @@ Future newplaylist(BuildContext context, _formKey) {
               controller: nameController,
               maxLength: 15,
               decoration: InputDecoration(
-                  counterStyle:
-                      TextStyle(color: Colors.white, fontFamily: 'poppins'),
+                  counterStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                   fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   border: OutlineInputBorder(
@@ -375,7 +391,6 @@ Future newplaylist(BuildContext context, _formKey) {
                       borderRadius: BorderRadius.circular(10)),
                   contentPadding: const EdgeInsets.only(left: 15, top: 5)),
               style: const TextStyle(
-                  fontFamily: 'poppins',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -403,7 +418,6 @@ Future newplaylist(BuildContext context, _formKey) {
               child: const Text(
                 'Cancel',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -418,7 +432,6 @@ Future newplaylist(BuildContext context, _formKey) {
               child: const Text(
                 'Create',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),

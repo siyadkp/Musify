@@ -32,8 +32,8 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: 410,
-        height: 820.5,
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 2,
         color: Colors.deepPurple[900],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

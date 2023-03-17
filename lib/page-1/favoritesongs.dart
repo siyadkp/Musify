@@ -45,21 +45,31 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
                                   fontWeight: FontWeight.w500)),
                         ),
                         SizedBox(
-                          child: ValueListenableBuilder(
-                            valueListenable: FavoriteDB.favoriteSongs,
-                            builder: (context, List<SongModel> value, child) {
-                              if (value.isEmpty) {
-                                const Center(
-                                  child: Text('No songs'),
-                                );
-                              } else {
-                                final tempdata = value.reversed.toList();
-                                value = tempdata.toSet().toList();
-                              }
-                              return Allmusiclisttile(songmodel: value);
-                            },
-                          ),
-                        )
+                            child: ValueListenableBuilder(
+                                valueListenable: FavoriteDB.favoriteSongs,
+                                builder: (context, List<SongModel> favoritedata,
+                                    Widget? child) {
+                                  if (favoritedata.isEmpty) {
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 300),
+                                        child: Text(
+                                          'No songs in favourites',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    final temp = favoritedata.reversed.toList();
+                                    favoritedata = temp.toSet().toList();
+                                    return Allmusiclisttile(
+                                      songmodel: favoritedata,
+                                    );
+                                  }
+                                }))
                       ],
                     ),
                   ))),

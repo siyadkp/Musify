@@ -39,6 +39,7 @@ dependencies:
   on_audio_query: ^2.6.1
   permission_handler: ^10.2.0
   provider: ^6.0.5
+  text_scroll: ^0.1.2
 
 dev_dependencies:
   build_runner: ^2.3.3
@@ -69,9 +70,11 @@ flutter:
     - assets/page-1/images/home.png
     - assets/page-1/images/likedsongs.png
     - assets/page-1/images/frame-5.png
-    - assets/page-1/images/f191a4786289ade562884722ef784cff.jpg
+    # - assets/page-1/images/f191a4786289ade562884722ef784cff.jpg
     - assets/page-1/images/sound-waves-1.png
     - assets/page-1/images/pexels-photo-3756766.jpeg
+    - assets/page-1/images/favorite.jpg
+    - assets/page-1/images/playlist.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

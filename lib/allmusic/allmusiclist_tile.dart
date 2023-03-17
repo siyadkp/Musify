@@ -3,10 +3,10 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:myapp/allmusic/allmusic.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
 import 'package:myapp/functions/fav_functions.dart';
+import 'package:myapp/functions/recpaly_functions.dart';
 import 'package:myapp/model/model.dart';
 import 'package:myapp/page-1/playnow/playnow.dart';
 import 'package:myapp/playlist/playlist.dart';
-
 import 'package:on_audio_query/on_audio_query.dart';
 
 class Allmusiclisttile extends StatefulWidget {
@@ -50,10 +50,12 @@ class _AllmusiclisttileState extends State<Allmusiclisttile> {
               artworkFit: BoxFit.cover,
             ),
             title: Text(widget.songmodel[index].displayNameWOExt,
-                maxLines: 1, style: const TextStyle(color: Colors.white70)),
+                maxLines: 1,
+                style:
+                    const TextStyle(color: Color.fromARGB(208, 255, 255, 255))),
             subtitle: Text(
               '${widget.songmodel[index].artist}',
-              style: const TextStyle(color: Colors.white70),
+              style: const TextStyle(color: Colors.white54),
               maxLines: 1,
             ),
             trailing: PopupMenuButton(
@@ -84,10 +86,6 @@ class _AllmusiclisttileState extends State<Allmusiclisttile> {
                       color: Color.fromARGB(255, 39, 33, 55),
                     ),
                   ),
-                ),
-                PopupMenuItem(child: Container(child: const Text('Share'))),
-                const PopupMenuItem(
-                  child: Text('Song Info'),
                 ),
               ],
               onSelected: (value) {
@@ -133,6 +131,7 @@ class _AllmusiclisttileState extends State<Allmusiclisttile> {
               },
             ),
             onTap: () {
+              GetRecentlyPlayed.addRecentlyPlayed(widget.songmodel[index].id);
               Getallsongs.audioPlayer.setAudioSource(
                   Getallsongs.createsongslist(widget.songmodel),
                   initialIndex: index);
@@ -179,12 +178,14 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                                 right: 30,
                                 left: 30,
                                 bottom: 50,
-                                child: Text('No Playlist found!',
-                                    style: TextStyle(
+                                child: Center(
+                                  child: Text('No Playlist found!',
+                                      style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
-                                        fontFamily: 'poppins')),
+                                      )),
+                                ),
                               )
                             ],
                           ),
