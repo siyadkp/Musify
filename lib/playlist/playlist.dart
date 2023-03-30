@@ -165,14 +165,6 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                                               255, 255, 255, 255),
                                         ),
                                       ),
-                                      trailing: IconButton(
-                                        tooltip: 'Drag Left',
-                                        icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {},
-                                      ),
                                     ),
                                   ),
                                 ),

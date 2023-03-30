@@ -10,6 +10,8 @@ import 'package:myapp/page-1/playnow/artwork_widget.dart';
 import 'package:myapp/page-1/playnow/player_controler.dart';
 import '../../allmusic/allmusiclist_tile.dart';
 
+import '../../allmusic/allmusiclist_tile.dart';
+
 // ignore: must_be_immutable
 class PlayNowPage extends StatefulWidget {
   final List<SongDbModel> songsModel;

@@ -6,10 +6,11 @@ import 'package:myapp/page-1/settings/settings_screen.dart';
 import 'package:myapp/page-1/widget/miniplayer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
+  bool a = false;
 }
 
 class _HomePageState extends State<HomePage> {
