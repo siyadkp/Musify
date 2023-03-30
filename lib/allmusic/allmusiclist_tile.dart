@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:myapp/allmusic/allmusic.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
+import 'package:myapp/functions/allsong_db_functions.dart';
 import 'package:myapp/functions/fav_functions.dart';
+import 'package:myapp/functions/mostly_functions.dart';
+import 'package:myapp/functions/playlist/playlistdatabase.dart';
+import 'package:myapp/functions/playlist/song_add_to_playlist.dart';
+import 'package:myapp/functions/recpaly_functions.dart';
 import 'package:myapp/model/model.dart';
 import 'package:myapp/page-1/playnow/playnow.dart';
 import 'package:myapp/playlist/playlist.dart';
-
 import 'package:on_audio_query/on_audio_query.dart';
 
 class Allmusiclisttile extends StatefulWidget {
@@ -14,138 +17,133 @@ class Allmusiclisttile extends StatefulWidget {
     super.key,
     required this.songmodel,
   });
-  List<SongModel> songmodel = [];
+
+  List<SongDbModel> songmodel = [];
 
   @override
   State<Allmusiclisttile> createState() => _AllmusiclisttileState();
 }
 
 class _AllmusiclisttileState extends State<Allmusiclisttile> {
-  List<SongModel> songs = [];
+  List<SongDbModel> songs = [];
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       itemBuilder: (context, index) {
         songs.addAll(widget.songmodel);
-        return SizedBox(
-          height: 65,
-          child: ListTile(
-            leading: QueryArtworkWidget(
-              id: widget.songmodel[index].id,
-              type: ArtworkType.AUDIO,
-              artworkHeight: 60,
-              artworkWidth: 60,
-              nullArtworkWidget: Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                      color: Colors.white10,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Icon(
-                    Icons.music_note,
-                    color: Colors.white60,
-                  )),
-              artworkBorder: BorderRadius.circular(10),
-              artworkFit: BoxFit.cover,
-            ),
-            title: Text(widget.songmodel[index].displayNameWOExt,
-                maxLines: 1, style: const TextStyle(color: Colors.white70)),
-            subtitle: Text(
-              '${widget.songmodel[index].artist}',
-              style: const TextStyle(color: Colors.white70),
+        return ListTile(
+          leading: QueryArtworkWidget(
+            id: widget.songmodel[index].id,
+            type: ArtworkType.AUDIO,
+            artworkHeight: 60,
+            artworkWidth: 60,
+            nullArtworkWidget: Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                    color: Colors.white10,
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: const Icon(
+                  Icons.music_note,
+                  color: Colors.white60,
+                )),
+            artworkBorder: BorderRadius.circular(10),
+            artworkFit: BoxFit.cover,
+          ),
+          title: Text(widget.songmodel[index].displayNameWOExt,
               maxLines: 1,
+              style:
+                  const TextStyle(color: Color.fromARGB(208, 255, 255, 255))),
+          subtitle: Text(
+            widget.songmodel[index].artist,
+            style: const TextStyle(color: Colors.white54),
+            maxLines: 1,
+          ),
+          trailing: PopupMenuButton(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            icon: const Icon(
+              Icons.more_vert,
+              size: 20,
             ),
-            trailing: PopupMenuButton(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              icon: const Icon(
-                Icons.more_vert,
-                size: 20,
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 1,
+                child: Text(
+                  'Add playlist',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
               ),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Container(
-                    child: const Text(
-                      'Add playlist',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontFamily: 'poppins'),
-                    ),
+              PopupMenuItem(
+                value: 2,
+                child: Text(
+                  FavoriteDB.favSongChecking(widget.songmodel[index])
+                      ? 'Remove Favorites'
+                      : 'Add Favorites',
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 39, 33, 55),
                   ),
                 ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text(
-                    FavoriteDB.isFavor(widget.songmodel[index])
-                        ? 'Remove Favorites'
-                        : 'Add Favorites',
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 39, 33, 55),
-                    ),
-                  ),
-                ),
-                PopupMenuItem(child: Container(child: const Text('Share'))),
-                const PopupMenuItem(
-                  child: Text('Song Info'),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 1) {
-                  showPlaylistdialog(context, startsong[index]);
-                } else if (value == 2) {
-                  if (FavoriteDB.isFavor(widget.songmodel[index])) {
-                    FavoriteDB.delete(widget.songmodel[index].id);
-                    const remove = SnackBar(
-                      backgroundColor: Color.fromARGB(222, 38, 46, 67),
-                      content: Center(
-                        child: Text(
-                          'Song Removed In Favorate List',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white70),
-                        ),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 1) {
+                showPlaylistdialog(context, resulted[index]);
+              } else if (value == 2) {
+                if (FavoriteDB.favSongChecking(widget.songmodel[index])) {
+                  FavoriteDB.favDelete(widget.songmodel[index].id);
+                  const remove = SnackBar(
+                    backgroundColor: Color.fromARGB(222, 38, 46, 67),
+                    content: Center(
+                      child: Text(
+                        'Song Removed In Favorate List',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white70),
                       ),
-                      duration: Duration(seconds: 2),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(remove);
-                  } else {
-                    FavoriteDB.add(widget.songmodel[index]);
-                    const add = SnackBar(
-                      backgroundColor: Color.fromARGB(222, 38, 46, 67),
-                      content: Center(
-                          child: Center(
-                        child: Text(
-                          'Song Added In Favorate List',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white70),
-                        ),
-                      )),
-                      duration: Duration(seconds: 2),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(add);
-                  }
-                  FavoriteDB.favoriteSongs.notifyListeners();
+                    ),
+                    duration: Duration(seconds: 2),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(remove);
+                } else {
+                  FavoriteDB.favAdd(
+                      widget.songmodel[index].id, widget.songmodel[index]);
+                  const add = SnackBar(
+                    backgroundColor: Color.fromARGB(222, 38, 46, 67),
+                    content: Center(
+                        child: Center(
+                      child: Text(
+                        'Song Added In Favorate List',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white70),
+                      ),
+                    )),
+                    duration: Duration(seconds: 2),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(add);
                 }
-              },
-            ),
-            onTap: () {
-              Getallsongs.audioPlayer.setAudioSource(
-                  Getallsongs.createsongslist(widget.songmodel),
-                  initialIndex: index);
-              // context
-              //     .read<Songmodelprovider>()
-              //     .setid(widget.songmodel[index].id);
-
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PlayNowPage(
-                      songsModel: widget.songmodel,
-                      count: widget.songmodel.length)));
+              }
             },
           ),
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            GetRecentlyPlayed.addRecentlyPlayed(widget.songmodel[index].id);
+            Getallsongs.audioPlayer.setAudioSource(
+                Getallsongs.createsongslist(widget.songmodel),
+                initialIndex: index);
+            MostlyFunctions.addMostly(widget.songmodel[index].id);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PlayNowPage(
+                      songsModel: widget.songmodel,
+                      // count: widget.songmodel.length
+                    )));
+          },
         );
       },
       itemCount: widget.songmodel.length,
@@ -153,7 +151,7 @@ class _AllmusiclisttileState extends State<Allmusiclisttile> {
   }
 }
 
-showPlaylistdialog(BuildContext context, SongModel songModel) {
+showPlaylistdialog(BuildContext context, SongDbModel song) {
   showDialog(
       context: context,
       builder: (_) {
@@ -161,17 +159,17 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
           backgroundColor: const Color.fromARGB(255, 52, 6, 105),
           title: const Text(
             "choose your playlist",
-            style: TextStyle(color: Colors.white, fontFamily: 'poppins'),
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
           content: SizedBox(
             height: 200,
             width: double.maxFinite,
             child: ValueListenableBuilder(
-                valueListenable:
-                    Hive.box<Playermodel>('playlistDb').listenable(),
-                builder: (BuildContext context, Box<Playermodel> musicList,
-                    Widget? child) {
-                  return Hive.box<Playermodel>('playlistDb').isEmpty
+                valueListenable: PlaylistDB.playlistNotifiier,
+                builder: (BuildContext context, musicList, Widget? child) {
+                  return Hive.box('playlistDb').isEmpty
                       ? Center(
                           child: Stack(
                             children: const [
@@ -179,12 +177,14 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                                 right: 30,
                                 left: 30,
                                 bottom: 50,
-                                child: Text('No Playlist found!',
-                                    style: TextStyle(
+                                child: Center(
+                                  child: Text('No Playlist found!',
+                                      style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
-                                        fontFamily: 'poppins')),
+                                      )),
+                                ),
                               )
                             ],
                           ),
@@ -192,7 +192,7 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                       : ListView.builder(
                           itemCount: musicList.length,
                           itemBuilder: (ctx, index) {
-                            final data = musicList.values.toList()[index];
+                            // final data = musicList.values.toList()[index];
 
                             return Card(
                               color: const Color.fromARGB(255, 51, 2, 114),
@@ -202,18 +202,22 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                                   side: const BorderSide(color: Colors.white)),
                               child: ListTile(
                                 title: Text(
-                                  data.name,
+                                  musicList[index],
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'poppins'),
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 trailing: const Icon(
                                   Icons.playlist_add,
                                   color: Colors.white,
                                 ),
                                 onTap: () {
+                                  Playermodel value = Playermodel(
+                                      index: index,
+                                      song: song,
+                                      playlistName: musicList[index]);
                                   songaddtoplaylist(
-                                      songModel, data, data.name, ctx);
+                                      value, context, musicList[index]);
                                   Navigator.pop(ctx);
                                 },
                               ),
@@ -229,7 +233,9 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                 },
                 child: const Text(
                   'New Playlist',
-                  style: TextStyle(color: Colors.white, fontFamily: 'poppins'),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 )),
             TextButton(
                 onPressed: () {
@@ -237,17 +243,20 @@ showPlaylistdialog(BuildContext context, SongModel songModel) {
                 },
                 child: const Text(
                   'cancel',
-                  style: TextStyle(color: Colors.white, fontFamily: 'poppins'),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ))
           ],
         );
       });
 }
 
-void songaddtoplaylist(
-    SongModel data, datas, String name, BuildContext context) {
-  if (!datas.isvalule(data.id)) {
-    datas.add(data.id);
+TextEditingController _playlistnamecontroller = TextEditingController();
+void songaddtoplaylist(Playermodel value, BuildContext context, name) {
+  bool condition = PlaylistSongDB.playlistSongChecking(value.song);
+  if (condition == false) {
+    PlaylistSongDB.playlistSongAdd(value.playlistName, value, value.index);
     final snake1 = SnackBar(
         duration: const Duration(seconds: 1),
         backgroundColor: const Color.fromARGB(222, 38, 46, 67),
@@ -278,7 +287,6 @@ Future newplaylist(BuildContext context, formKey) {
           child: Text(
             'New to Playlist',
             style: TextStyle(
-                fontFamily: 'poppins',
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -292,11 +300,12 @@ Future newplaylist(BuildContext context, formKey) {
             key: formKey,
             child: TextFormField(
               textAlign: TextAlign.center,
-              controller: nameController,
+              controller: _playlistnamecontroller,
               maxLength: 15,
               decoration: InputDecoration(
                   counterStyle: const TextStyle(
-                      color: Colors.white, fontFamily: 'poppins'),
+                    color: Colors.white,
+                  ),
                   fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   border: OutlineInputBorder(
@@ -304,7 +313,6 @@ Future newplaylist(BuildContext context, formKey) {
                       borderRadius: BorderRadius.circular(10)),
                   contentPadding: const EdgeInsets.only(left: 15, top: 5)),
               style: const TextStyle(
-                  fontFamily: 'poppins',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -327,12 +335,11 @@ Future newplaylist(BuildContext context, formKey) {
             SimpleDialogOption(
               onPressed: () {
                 Navigator.of(context).pop();
-                nameController.clear();
+                _playlistnamecontroller.clear();
               },
               child: const Text(
                 'Cancel',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -341,13 +348,12 @@ Future newplaylist(BuildContext context, formKey) {
             SimpleDialogOption(
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  saveButtonPressed(context);
+                  saveButtonPressed(context, _playlistnamecontroller);
                 }
               },
               child: const Text(
                 'Create',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),

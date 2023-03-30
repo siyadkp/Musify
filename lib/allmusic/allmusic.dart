@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:myapp/allmusic/allmusiclist_tile.dart';
-import 'package:myapp/functions/fav_functions.dart';
+import 'package:myapp/functions/allsong_db_functions.dart';
+import 'package:myapp/model/model.dart';
+
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-List<SongModel> startsong = [];
+List<SongModel> songs = [];
 
 class AllsongsWidget extends StatefulWidget {
   const AllsongsWidget({super.key});
@@ -49,13 +52,34 @@ class _AllsongsWidgetState extends State<AllsongsWidget> {
         }
         if (item.data!.isEmpty) {
           return const Center(
-            child: Text('No songs'),
+            child: Text(
+              'No songs',
+              style: TextStyle(color: Colors.white54),
+            ),
           );
+        } else {
+          songs = item.data!;
+          final allsongDb = Hive.box<SongDbModel>('songs');
+          allsongDb.clear();
+          for (var element in songs) {
+            var value = SongDbModel(
+              id: element.id,
+              data: element.data,
+              uri: element.uri!,
+              displayName: element.displayName,
+              displayNameWOExt: element.displayNameWOExt,
+              artist: element.artist!,
+              artistId: element.artistId!,
+            );
+
+            SongModelFunctions.addAllsong(value);
+          }
+
+          SongModelFunctions.getAllsong();
         }
-        startsong = item.data!;
-        FavoriteDB.isintialized(item.data!);
+
         return Allmusiclisttile(
-          songmodel: item.data!,
+          songmodel: resulted,
         );
       },
     );

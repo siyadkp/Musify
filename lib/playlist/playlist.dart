@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myapp/functions/playlistdatabase.dart';
-import 'package:myapp/model/model.dart';
+import 'package:myapp/functions/playlist/playlistdatabase.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:on_audio_query/on_audio_query.dart';
-
 import 'playlistindividual.dart';
 
 class Playlistwidget extends StatefulWidget {
@@ -15,89 +11,103 @@ class Playlistwidget extends StatefulWidget {
 }
 
 final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-final playlistnamecontroller = TextEditingController();
+TextEditingController _playlistnamecontroller = TextEditingController();
 
 class _PlaylistwidgetState extends State<Playlistwidget> {
   @override
+  void initState() {
+    super.initState();
+    PlaylistDB.getAllPlaylist();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/page-1/images/home.png'),
-              fit: BoxFit.cover,
-            ),
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/page-1/images/home.png'),
+            fit: BoxFit.cover,
           ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white38,
-                          )),
-                    ),
-                    const Text(
-                      'Playlist',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 200),
-                      child: IconButton(
-                          onPressed: () {
-                            newplaylist(context, formkey);
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            color: Colors.white38,
-                            size: 40,
-                          )),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ValueListenableBuilder(
-                        valueListenable:
-                            Hive.box<Playermodel>('playlistDb').listenable(),
-                        builder: (BuildContext context,
-                            Box<Playermodel> musiclist, Widget? child) {
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white38,
+                        )),
+                  ),
+                  const Text(
+                    'Playlist',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 200),
+                    child: IconButton(
+                        onPressed: () {
+                          newplaylist(context, formkey);
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.white38,
+                          size: 40,
+                        )),
+                  )
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ValueListenableBuilder(
+                      valueListenable: PlaylistDB.playlistNotifiier,
+                      builder: (BuildContext context, palylistNameList,
+                          Widget? child) {
+                        if (palylistNameList.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 300, left: 120),
+                            child: Text(
+                              'Add playlist',
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 25),
+                            ),
+                          );
+                        } else {
                           return ListView.builder(
-                            itemCount: musiclist.length,
+                            itemCount: palylistNameList.length,
                             itemBuilder: (context, index) {
-                              final data = musiclist.values.toList()[index];
+                              // final data = PlaylistDB.playlistSongGet(index);
                               return Slidable(
                                 endActionPane: ActionPane(
                                   motion: const BehindMotion(),
                                   children: [
                                     SlidableAction(
                                       spacing: 0,
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                           Radius.circular(100)),
                                       onPressed: (context) {
-                                        DeletePlaylist(
-                                            context, musiclist, index);
+                                        deletePlaylist(context, index);
                                       },
                                       icon: Icons.delete_outline,
                                       foregroundColor: Colors.red,
                                       backgroundColor: Colors.transparent,
                                     ),
                                     SlidableAction(
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                           Radius.circular(100)),
                                       onPressed: (context) {
-                                        EditPlaylistName(context, data, index);
+                                        editPlaylistName(context,
+                                            palylistNameList[index], index);
                                       },
                                       icon: Icons.edit,
                                       foregroundColor: Colors.white,
@@ -133,8 +143,10 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 Playlisttoaddsong(
-                                                    sindex: index,
-                                                    playlist: data),
+                                              playlistIndex: index,
+                                              playlistName:
+                                                  palylistNameList[index],
+                                            ),
                                           ),
                                         );
                                       },
@@ -144,7 +156,7 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                                             Color.fromARGB(255, 255, 255, 255),
                                       ),
                                       title: Text(
-                                        data.name,
+                                        palylistNameList[index],
                                         textAlign: TextAlign.left,
                                         style: const TextStyle(
                                           fontSize: 18,
@@ -167,13 +179,13 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                               );
                             },
                           );
-                        },
-                      ),
+                        }
+                      },
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -185,23 +197,22 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
 }
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-TextEditingController nameController = TextEditingController();
+TextEditingController _editplaylistnameController = TextEditingController();
 
-Future<dynamic> EditPlaylistName(
-    BuildContext context, Playermodel data, int index) {
-  nameController = TextEditingController(text: data.name);
+Future<dynamic> editPlaylistName(
+    BuildContext context, String oldPlaylistName, int index) {
+  _editplaylistnameController = TextEditingController(text: oldPlaylistName);
   return showDialog(
     context: context,
     builder: (ctx) => SimpleDialog(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
-      backgroundColor: Color.fromARGB(255, 52, 6, 105),
+      backgroundColor: const Color.fromARGB(255, 52, 6, 105),
       children: [
         SimpleDialogOption(
           child: Text(
-            "Edit Playlist '${data.name}'",
+            "Edit Playlist '$oldPlaylistName'",
             style: const TextStyle(
-                fontFamily: 'poppins',
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -215,11 +226,12 @@ Future<dynamic> EditPlaylistName(
             key: _formKey,
             child: TextFormField(
               textAlign: TextAlign.center,
-              controller: nameController,
+              controller: _editplaylistnameController,
               maxLength: 15,
               decoration: InputDecoration(
                   counterStyle: const TextStyle(
-                      color: Colors.white, fontFamily: 'poppins'),
+                    color: Colors.white,
+                  ),
                   fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   border: OutlineInputBorder(
@@ -227,7 +239,6 @@ Future<dynamic> EditPlaylistName(
                       borderRadius: BorderRadius.circular(10)),
                   contentPadding: const EdgeInsets.only(left: 15, top: 5)),
               style: const TextStyle(
-                  fontFamily: 'poppins',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -250,12 +261,11 @@ Future<dynamic> EditPlaylistName(
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(ctx);
-                nameController.clear();
+                _editplaylistnameController.clear();
               },
               child: const Text(
                 'Cancel',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Colors.purpleAccent,
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
@@ -264,21 +274,22 @@ Future<dynamic> EditPlaylistName(
             SimpleDialogOption(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  final name = nameController.text.trim();
-                  if (name.isEmpty) {
+                  if (oldPlaylistName.isEmpty) {
                     return;
                   } else {
-                    final playlistName = Playermodel(name: name, songid: []);
-                    PlaylistDb.editList(index, playlistName);
+                    PlaylistDB.editList(
+                        index,
+                        _editplaylistnameController.text.trim(),
+                        oldPlaylistName);
+                    // PlaylistDB.editList(index, playlistName);
                   }
-                  nameController.clear();
+                  _editplaylistnameController.clear();
                   Navigator.pop(ctx);
                 }
               },
               child: const Text(
                 'Update',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Colors.purpleAccent,
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
@@ -291,19 +302,22 @@ Future<dynamic> EditPlaylistName(
   );
 }
 
-Future<dynamic> DeletePlaylist(
-    BuildContext context, Box<Playermodel> musicList, int index) {
+Future<dynamic> deletePlaylist(BuildContext context, int index) {
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: Color.fromARGB(255, 52, 6, 105),
+        backgroundColor: const Color.fromARGB(255, 52, 6, 105),
         title: const Text(
           'Delete Playlist',
-          style: TextStyle(color: Colors.white, fontFamily: 'poppins'),
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
         content: const Text('Are you sure you want to delete this playlist?',
-            style: TextStyle(color: Colors.white, fontFamily: 'poppins')),
+            style: TextStyle(
+              color: Colors.white,
+            )),
         actions: [
           TextButton(
             onPressed: () {
@@ -311,11 +325,12 @@ Future<dynamic> DeletePlaylist(
             },
             child: const Text('No',
                 style: TextStyle(
-                    color: Colors.purpleAccent, fontFamily: 'poppins')),
+                  color: Colors.purpleAccent,
+                )),
           ),
           TextButton(
             onPressed: () {
-              musicList.deleteAt(index);
+              PlaylistDB.deletePlaylist(index);
               Navigator.pop(context);
               const snackBar = SnackBar(
                 backgroundColor: Colors.black,
@@ -329,7 +344,8 @@ Future<dynamic> DeletePlaylist(
             },
             child: const Text('Yes',
                 style: TextStyle(
-                    color: Colors.purpleAccent, fontFamily: 'poppins')),
+                  color: Colors.purpleAccent,
+                )),
           ),
         ],
       );
@@ -337,19 +353,18 @@ Future<dynamic> DeletePlaylist(
   );
 }
 
-Future newplaylist(BuildContext context, _formKey) {
+Future newplaylist(BuildContext context, formKey) {
   return showDialog(
     context: context,
     builder: (ctx) => SimpleDialog(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
-      backgroundColor: Color.fromARGB(255, 52, 6, 105),
+      backgroundColor: const Color.fromARGB(255, 52, 6, 105),
       children: [
         const SimpleDialogOption(
           child: Text(
             'New to Playlist',
             style: TextStyle(
-                fontFamily: 'poppins',
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -360,14 +375,15 @@ Future newplaylist(BuildContext context, _formKey) {
         ),
         SimpleDialogOption(
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: TextFormField(
               textAlign: TextAlign.center,
-              controller: nameController,
+              controller: _playlistnamecontroller,
               maxLength: 15,
               decoration: InputDecoration(
-                  counterStyle:
-                      TextStyle(color: Colors.white, fontFamily: 'poppins'),
+                  counterStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
                   fillColor: Colors.white.withOpacity(0.7),
                   filled: true,
                   border: OutlineInputBorder(
@@ -375,7 +391,6 @@ Future newplaylist(BuildContext context, _formKey) {
                       borderRadius: BorderRadius.circular(10)),
                   contentPadding: const EdgeInsets.only(left: 15, top: 5)),
               style: const TextStyle(
-                  fontFamily: 'poppins',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -398,12 +413,11 @@ Future newplaylist(BuildContext context, _formKey) {
             SimpleDialogOption(
               onPressed: () {
                 Navigator.of(context).pop();
-                nameController.clear();
+                _playlistnamecontroller.clear();
               },
               child: const Text(
                 'Cancel',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -411,14 +425,13 @@ Future newplaylist(BuildContext context, _formKey) {
             ),
             SimpleDialogOption(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  saveButtonPressed(context);
-                }
+                // if (_formKey.currentState!.validate()) {
+                saveButtonPressed(context, _playlistnamecontroller);
+                // }
               },
               child: const Text(
                 'Create',
                 style: TextStyle(
-                    fontFamily: 'poppins',
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -431,13 +444,12 @@ Future newplaylist(BuildContext context, _formKey) {
   );
 }
 
-Future<void> saveButtonPressed(context) async {
-  final name = nameController.text.trim();
-  final music = Playermodel(name: name, songid: []);
-  final datas = PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
+Future<void> saveButtonPressed(context, playlistname) async {
+  final name = playlistname.text.trim();
+  bool condition = PlaylistDB.playlistNameChecking(name);
   if (name.isEmpty) {
     return;
-  } else if (datas.contains(music.name)) {
+  } else if (condition == true) {
     const snackbar3 = SnackBar(
         duration: Duration(milliseconds: 750),
         backgroundColor: Colors.black,
@@ -448,7 +460,7 @@ Future<void> saveButtonPressed(context) async {
     ScaffoldMessenger.of(context).showSnackBar(snackbar3);
     Navigator.of(context).pop();
   } else {
-    PlaylistDb.addPlaylist(music);
+    PlaylistDB.addPlaylist(name);
     const snackbar4 = SnackBar(
         duration: Duration(milliseconds: 750),
         backgroundColor: Colors.black,
@@ -458,6 +470,6 @@ Future<void> saveButtonPressed(context) async {
         ));
     ScaffoldMessenger.of(context).showSnackBar(snackbar4);
     Navigator.pop(context);
-    nameController.clear();
+    _playlistnamecontroller.clear();
   }
 }

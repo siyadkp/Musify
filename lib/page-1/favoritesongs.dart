@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/allmusic/allmusiclist_tile.dart';
 import 'package:myapp/functions/fav_functions.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:myapp/model/model.dart';
 
 // ignore: use_key_in_widget_constructors
 class LikedSongsPage extends StatefulWidget {
@@ -11,16 +11,20 @@ class LikedSongsPage extends StatefulWidget {
 
 class _LikedSongsPageState extends State<LikedSongsPage> {
   @override
+  void initState() {
+    super.initState();
+    FavoriteDB.favGet();
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
     return ValueListenableBuilder(
-      valueListenable: FavoriteDB.favoriteSongs,
-      builder: (context, List<SongModel> favdata, child) {
+      valueListenable: FavoriteDB.favoriteSongsNotifer,
+      builder: (context, List<SongDbModel> favdata, child) {
         return Scaffold(
-          body: Container(
+          body: SizedBox(
               // likedsongs9Ut (2:49)
               width: double.infinity,
               height: 800 * fem,
@@ -45,21 +49,33 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
                                   fontWeight: FontWeight.w500)),
                         ),
                         SizedBox(
-                          child: ValueListenableBuilder(
-                            valueListenable: FavoriteDB.favoriteSongs,
-                            builder: (context, List<SongModel> value, child) {
-                              if (value.isEmpty) {
-                                const Center(
-                                  child: Text('No songs'),
-                                );
-                              } else {
-                                final tempdata = value.reversed.toList();
-                                value = tempdata.toSet().toList();
-                              }
-                              return Allmusiclisttile(songmodel: value);
-                            },
-                          ),
-                        )
+                            child: ValueListenableBuilder(
+                                valueListenable:
+                                    FavoriteDB.favoriteSongsNotifer,
+                                builder: (context,
+                                    List<SongDbModel> favoritedata,
+                                    Widget? child) {
+                                  if (favoritedata.isEmpty) {
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 300),
+                                        child: Text(
+                                          'No songs in favourites',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    final temp = favoritedata.reversed.toList();
+                                    favoritedata = temp.toSet().toList();
+                                    return Allmusiclisttile(
+                                      songmodel: favoritedata,
+                                    );
+                                  }
+                                }))
                       ],
                     ),
                   ))),

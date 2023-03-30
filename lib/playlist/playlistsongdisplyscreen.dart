@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/controller/get_allsongs_controler.dart';
-import 'package:myapp/functions/playlistdatabase.dart';
+import 'package:myapp/functions/allsong_db_functions.dart';
+import 'package:myapp/functions/playlist/song_add_to_playlist.dart';
 import 'package:myapp/model/model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class Playlistsongdisplayscreen extends StatefulWidget {
-  const Playlistsongdisplayscreen({
-    super.key,
-    required this.playlist,
-  });
-  final Playermodel playlist;
+  const Playlistsongdisplayscreen(
+      {super.key, required this.playlistIndex, required this.playlistName});
+  final int playlistIndex;
+  final String playlistName;
 
   @override
   State<Playlistsongdisplayscreen> createState() =>
@@ -19,6 +18,7 @@ class Playlistsongdisplayscreen extends StatefulWidget {
 final audioquery = OnAudioQuery();
 
 class _PlaylistsongdisplayscreenState extends State<Playlistsongdisplayscreen> {
+  // bool condition=true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,96 +38,93 @@ class _PlaylistsongdisplayscreenState extends State<Playlistsongdisplayscreen> {
                 fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
           ),
         ),
-        body: FutureBuilder<List<SongModel>>(
-            future: audioquery.querySongs(
-              sortType: null,
-              orderType: OrderType.ASC_OR_SMALLER,
-              uriType: UriType.EXTERNAL,
-              path: '/storage/emulated/0/Musify',
-              ignoreCase: true,
-            ),
-            builder: (context, item) {
-              if (item.data == null) {
-                return const CircularProgressIndicator();
-              }
-              if (item.data!.isEmpty) {
-                return const Center(child: Text('No Songs Available'));
-              }
-              return ListView.builder(
-                itemCount: item.data!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: QueryArtworkWidget(
-                      id: item.data![index].id,
-                      type: ArtworkType.AUDIO,
-                      artworkHeight: 60,
-                      artworkWidth: 60,
-                      nullArtworkWidget: Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: Colors.white10,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: const Icon(
-                            Icons.music_note,
-                            color: Colors.white60,
-                          )),
-                      artworkBorder: BorderRadius.circular(10),
-                      artworkFit: BoxFit.cover,
-                    ),
-                    title: Text(item.data![index].displayNameWOExt,
-                        maxLines: 1,
-                        style: const TextStyle(color: Colors.white70)),
-                    subtitle: Text(
-                      item.data![index].artist!,
-                      style: const TextStyle(color: Colors.white70),
-                      maxLines: 1,
-                    ),
-                    trailing: Wrap(
-                      children: [
-                        !widget.playlist.isvalule(item.data![index].id)
-                            ? IconButton(
-                                onPressed: () {
-                                  Getallsongs.copysong = item.data!;
-                                  setState(() {
-                                    songaddplaylist(item.data![index]);
-                                    PlaylistDb.playlistNotifiier
-                                        .notifyListeners();
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white60,
-                                ),
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    widget.playlist
-                                        .deletedata(item.data![index].id);
-                                    const removesongplaylistsnake = SnackBar(
-                                        backgroundColor:
-                                            Color.fromARGB(222, 38, 46, 67),
-                                        duration: Duration(seconds: 1),
-                                        content: Center(
-                                            child: Text(
-                                                'Music Removed In Playlist')));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(removesongplaylistsnake);
-                                  });
-                                },
-                                icon: const Icon(Icons.remove,
-                                    color: Colors.white60))
-                      ],
-                    ),
-                  );
-                },
+        body: FutureBuilder<SongDbModel>(builder: (context, item) {
+          if (resulted.isEmpty) {
+            return const Center(child: Text('No Songs Available'));
+          }
+          return ListView.builder(
+            itemCount: resulted.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: QueryArtworkWidget(
+                  id: resulted[index].id,
+                  type: ArtworkType.AUDIO,
+                  artworkHeight: 60,
+                  artworkWidth: 60,
+                  nullArtworkWidget: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          color: Colors.white10,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Icon(
+                        Icons.music_note,
+                        color: Colors.white60,
+                      )),
+                  artworkBorder: BorderRadius.circular(10),
+                  artworkFit: BoxFit.cover,
+                ),
+                title: Text(resulted[index].displayNameWOExt,
+                    maxLines: 1, style: const TextStyle(color: Colors.white70)),
+                subtitle: Text(
+                  resulted[index].artist,
+                  style: const TextStyle(color: Colors.white70),
+                  maxLines: 1,
+                ),
+                trailing: Wrap(
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: PlaylistSongDB.playlistSongsNotifer,
+                      builder: (context, value, child) {
+                        if (!PlaylistSongDB.playlistSongChecking(
+                            resulted[index])) {
+                          return IconButton(
+                            onPressed: () {
+                              // Getallsongs.copysong =
+                              //     resulted.cast<SongDbModel>();
+
+                              Playermodel value = Playermodel(
+                                  index: index,
+                                  song: resulted[index],
+                                  playlistName: widget.playlistName);
+                              songaddplaylist(
+                                  widget.playlistName, value, index);
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white60,
+                            ),
+                          );
+                        } else {
+                          return IconButton(
+                              onPressed: () {
+                                PlaylistSongDB.playlisSongDelete(
+                                    widget.playlistName, index);
+                                const removesongplaylistsnake = SnackBar(
+                                    backgroundColor:
+                                        Color.fromARGB(222, 38, 46, 67),
+                                    duration: Duration(seconds: 1),
+                                    content: Center(
+                                        child:
+                                            Text('Music Removed In Playlist')));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(removesongplaylistsnake);
+                              },
+                              icon: const Icon(Icons.remove,
+                                  color: Colors.white60));
+                        }
+                      },
+                    )
+                  ],
+                ),
               );
-            }));
+            },
+          );
+        }));
   }
 
-  songaddplaylist(SongModel data) {
-    widget.playlist.add(data.id);
+  songaddplaylist(String playlistName, song, songIndex) {
+    PlaylistSongDB.playlistSongAdd(playlistName, song, songIndex);
     const addsongplaylistsnake = SnackBar(
         backgroundColor: Color.fromARGB(222, 38, 46, 67),
         duration: Duration(seconds: 1),

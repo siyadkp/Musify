@@ -2,25 +2,46 @@ import 'package:hive_flutter/hive_flutter.dart';
 part 'model.g.dart';
 
 @HiveType(typeId: 1)
-class Playermodel extends HiveObject {
+class Playermodel {
   @HiveField(0)
-  String name;
+  int index;
   @HiveField(1)
-  List<int> songid;
+  SongDbModel song;
+  @HiveField(2)
+  String playlistName;
 
-  Playermodel({required this.name, required this.songid});
+  Playermodel(
+      {required this.index, required this.song, required this.playlistName});
+}
 
-  add(int id) {
-    songid.add(id);
-    save();
-  }
+@HiveType(typeId: 2)
+class SongDbModel {
+  @HiveField(0)
+  int id;
+  @HiveField(1)
+  String data;
+  @HiveField(2)
+  String uri;
+  @HiveField(3)
+  String displayName;
+  @HiveField(4)
+  String displayNameWOExt;
+  @HiveField(5)
+  String artist;
+  @HiveField(6)
+  int artistId;
 
-  deletedata(int id) {
-    songid.remove(id);
-    save();
-  }
+  SongDbModel({
+    required this.id,
+    required this.data,
+    required this.uri,
+    required this.displayName,
+    required this.displayNameWOExt,
+    required this.artist,
+    required this.artistId,
+  });
 
-  bool isvalule(int id) {
-    return songid.contains(id);
-  }
+  void addAll(List<SongDbModel> mostlyResult) {}
+
+  void clear() {}
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/allmusic/allmusic.dart';
 import 'package:myapp/page-1/playnow/playnow.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -11,27 +12,31 @@ class ArtworkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: QueryArtworkWidget(
-        keepOldArtwork: true,
-        id: widget.songsModel[currentindex].id,
-        type: ArtworkType.AUDIO,
-        artworkWidth: 250,
-        artworkHeight: 250,
-        artworkFit: BoxFit.cover,
-        artworkBorder: const BorderRadius.all(
-          Radius.circular(30),
+      child: Card(
+        color: Colors.transparent,
+        shadowColor: Colors.transparent,
+        child: QueryArtworkWidget(
+          keepOldArtwork: true,
+          id: songs[currentindex].id,
+          type: ArtworkType.AUDIO,
+          artworkWidth: 250,
+          artworkHeight: 250,
+          artworkFit: BoxFit.cover,
+          artworkBorder: const BorderRadius.all(
+            Radius.circular(30),
+          ),
+          nullArtworkWidget: Container(
+              height: 250,
+              width: 250,
+              decoration: const BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              child: const Icon(
+                Icons.music_note,
+                size: 120,
+                color: Colors.white60,
+              )),
         ),
-        nullArtworkWidget: Container(
-            height: 250,
-            width: 250,
-            decoration: const BoxDecoration(
-                color: Colors.white10,
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            child: const Icon(
-              Icons.music_note,
-              size: 120,
-              color: Colors.white60,
-            )),
       ),
     );
   }

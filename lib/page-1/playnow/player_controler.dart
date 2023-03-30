@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:myapp/model/model.dart';
 
 class Playercontroler extends StatefulWidget {
   const Playercontroler(
@@ -13,7 +13,7 @@ class Playercontroler extends StatefulWidget {
   final int count;
   final bool firstsong;
   final bool lastsong;
-  final SongModel songModel;
+  final SongDbModel songModel;
 
   @override
   State<Playercontroler> createState() => _PlayercontrolerState();
@@ -44,7 +44,7 @@ class _PlayercontrolerState extends State<Playercontroler> {
                 if (isshuffle) {
                   return const Icon(
                     Icons.shuffle_on_outlined,
-                    color: Colors.blue,
+                    color: Colors.white38,
                   );
                 } else {
                   return const Icon(
@@ -60,8 +60,7 @@ class _PlayercontrolerState extends State<Playercontroler> {
                   setState(() {
                     Getallsongs.currentindexgetallsongs--;
                     if (Getallsongs.currentindexgetallsongs < 0) {
-                      Getallsongs.currentindexgetallsongs =
-                          widget.songModel.size;
+                      Getallsongs.currentindexgetallsongs = 0;
                     }
                   });
                 },
@@ -133,7 +132,7 @@ class _PlayercontrolerState extends State<Playercontroler> {
                 if (LoopMode.one == loopmode) {
                   return const Icon(
                     Icons.repeat_on_outlined,
-                    color: Colors.blue,
+                    color: Colors.white38,
                   );
                 } else {
                   return const Icon(

@@ -1,17 +1,18 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:myapp/allmusic/allmusic.dart';
+import 'package:myapp/controller/get_allsongs_controler.dart';
+import 'package:myapp/page-1/recentlyplayed/recently_screen.dart';
+import 'package:myapp/page-1/settings/settings_screen.dart';
+import 'package:myapp/page-1/widget/miniplayer.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int bottomnavindexnum = 0;
-  List<Widget> tabbarwidget = const [AllsongsWidget()];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,12 +46,24 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const RecentlyScreen())));
+                            },
                             icon: const Icon(Icons.history_toggle_off_rounded),
                             color: Colors.white,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const SettingsScreen())));
+                            },
                             icon: const Icon(Icons.settings),
                             color: Colors.white,
                           )
@@ -67,7 +80,10 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 25,
                           fontWeight: FontWeight.w500)),
                 ),
-                Expanded(child: tabbarwidget[bottomnavindexnum]),
+                const Expanded(child: AllsongsWidget()),
+                (Getallsongs.audioPlayer.currentIndex != null)
+                    ? const MiniPlayer()
+                    : Container(),
               ],
             ),
           ),
