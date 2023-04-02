@@ -1,6 +1,6 @@
-# test
+# Musify
 
-A new Flutter project.
+This my first project.This a offline Music player.
 
 ## Getting Started
 
