@@ -1,5 +1,9 @@
+
 # Musify
 
+Release at https://play.google.com/store/apps/details?id=in.siyad.musify
+
+## Intro
 This my first project.This a offline Music player.
 
 ## Getting Started
