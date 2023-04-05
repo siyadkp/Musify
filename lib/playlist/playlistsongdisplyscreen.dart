@@ -40,7 +40,11 @@ class _PlaylistsongdisplayscreenState extends State<Playlistsongdisplayscreen> {
         ),
         body: FutureBuilder<SongDbModel>(builder: (context, item) {
           if (resulted.isEmpty) {
-            return const Center(child: Text('No Songs Available'));
+            return const Center(
+                child: Text(
+              'No Songs Available',
+              style: TextStyle(color: Colors.white),
+            ));
           }
           return ListView.builder(
             itemCount: resulted.length,
@@ -80,9 +84,6 @@ class _PlaylistsongdisplayscreenState extends State<Playlistsongdisplayscreen> {
                             resulted[index])) {
                           return IconButton(
                             onPressed: () {
-                              // Getallsongs.copysong =
-                              //     resulted.cast<SongDbModel>();
-
                               Playermodel value = Playermodel(
                                   index: index,
                                   song: resulted[index],

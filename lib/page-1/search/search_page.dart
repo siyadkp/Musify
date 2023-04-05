@@ -16,41 +16,42 @@ TextEditingController _textControler = TextEditingController();
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width * 2,
-        height: MediaQuery.of(context).size.width * 2,
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.zero),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(
-                'assets/page-1/images/home.png',
+      body: Stack(
+        children: [
+          DecoratedBox(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.zero),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(
+                  'assets/page-1/images/home.png',
+                ),
               ),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 35, left: 15),
-                  child: Text(
-                    'Search',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.05, vertical: height * 0.02),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: height * 0.02),
+                      child: const Text(
+                        'Search',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Center(
-                    child: SizedBox(
-                      width: 380,
-                      height: 60,
+                    SizedBox(
+                      width: width * 10,
+                      height: 55,
                       child: TextField(
                         style: const TextStyle(
                             color: Color.fromARGB(204, 255, 255, 255),
@@ -91,25 +92,28 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
                     ),
-                  ),
+                    displayresult.isEmpty
+                        ? const Expanded(
+                            child: Center(
+                              child: Text(
+                                'No Searched Songs',
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 20),
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Allmusiclisttile(songmodel: displayresult),
+                            ),
+                          ),
+                  ],
                 ),
-                displayresult.isEmpty
-                    ? const Padding(
-                        padding: EdgeInsets.only(top: 245, left: 120),
-                        child: Text(
-                          'No Searched Songs',
-                          style: TextStyle(color: Colors.white70, fontSize: 20),
-                        ),
-                      )
-                    : Expanded(
-                        child: Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Allmusiclisttile(songmodel: displayresult),
-                      )),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

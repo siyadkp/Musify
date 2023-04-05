@@ -27,19 +27,4 @@ class GetRecentlyPlayed {
     }
     recentSongNotifier.value.addAll(recentSongs);
   }
-
-  // static Future<void> displayRecentlySongs() async {
-  //   final recentDB = await Hive.openBox('recentSongNotifier');
-  //   final recentSongItems = recentDB.values.toList();
-  //   recentSongNotifier.value.clear();
-  //   recentlyplayed.clear();
-  //   for (int i = 0; i < recentSongItems.length; i++) {
-  //     for (int j = 0; j < resulted.length; j++) {
-  //       if (recentSongItems[i] == resulted[j]) {
-  //         recentSongNotifier.value.add(resulted[j]);
-  //         recentlyplayed.add(resulted[j]);
-  //       }
-  //     }
-  //   }
-  // }
 }

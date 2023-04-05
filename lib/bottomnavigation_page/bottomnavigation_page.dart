@@ -12,13 +12,12 @@ class BottomNavigationPage extends StatefulWidget {
 }
 
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
-  @override
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
     HomePage(),
     const SearchPage(),
-    LikedSongsPage(),
+    const LikedSongsPage(),
     const LibraryPage()
   ];
 

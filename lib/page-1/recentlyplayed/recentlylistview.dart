@@ -22,8 +22,7 @@ class _RecentlyPlayedState extends State<RecentlyPlayed> {
               valueListenable: GetRecentlyPlayed.recentSongNotifier,
               builder: (context, value, child) {
                 if (value.isEmpty && recent.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 350, left: 100),
+                  return const Center(
                     child: Text(
                       "Your Recent Is Empty",
                       style: TextStyle(

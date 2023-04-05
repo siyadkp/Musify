@@ -28,6 +28,7 @@ class PlaylistDB {
     final playlistData = playlistDb.values.toList();
     playlistNotifiier.value.clear();
     playlistNotifiier.value.addAll(playlistData);
+    playlistNotifiier.notifyListeners();
   }
 
   static Future<void> deletePlaylist(int index) async {

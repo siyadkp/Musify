@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/allmusic/allmusic.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
+import 'package:myapp/model/model.dart';
 import 'package:myapp/page-1/recentlyplayed/recently_screen.dart';
 import 'package:myapp/page-1/settings/settings_screen.dart';
 import 'package:myapp/page-1/widget/miniplayer.dart';
@@ -15,12 +17,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    final allsongDb = Hive.box<SongDbModel>('songs');
+    allsongDb.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double baseWidth = 360;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+
     return Scaffold(
       body: SizedBox(
         // hometCx (1:9)
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 2,
+        height: MediaQuery.of(context).size.height,
         child: DecoratedBox(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -33,7 +45,8 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 15, right: 3),
+                  padding:
+                      EdgeInsets.fromLTRB(15 * fem, 15 * fem, 3 * fem, 0 * fem),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -73,13 +86,20 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 268, top: 15, bottom: 10),
-                  child: Text('All Music',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500)),
+                Padding(
+                  padding: EdgeInsets.only(left: 16 * fem, top: 10 * fem),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'All Music',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
                 ),
                 const Expanded(child: AllsongsWidget()),
                 (Getallsongs.audioPlayer.currentIndex != null)

@@ -35,10 +35,13 @@ class _PlaylisttoaddsongState extends State<Playlisttoaddsong> {
               Icons.arrow_back_ios,
               color: Colors.white60,
             )),
-        title: Text(
-          widget.playlistName,
-          style: const TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            widget.playlistName,
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+          ),
         ),
       ),
       body: SafeArea(

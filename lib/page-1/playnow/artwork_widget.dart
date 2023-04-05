@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/allmusic/allmusic.dart';
+import 'package:myapp/functions/allsong_db_functions.dart';
 import 'package:myapp/page-1/playnow/playnow.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -17,7 +17,7 @@ class ArtworkWidget extends StatelessWidget {
         shadowColor: Colors.transparent,
         child: QueryArtworkWidget(
           keepOldArtwork: true,
-          id: songs[currentindex].id,
+          id: resulted[currentindex].id,
           type: ArtworkType.AUDIO,
           artworkWidth: 250,
           artworkHeight: 250,

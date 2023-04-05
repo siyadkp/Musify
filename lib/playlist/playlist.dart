@@ -35,38 +35,45 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
             children: [
               Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white38,
-                        )),
-                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white38,
+                      )),
                   const Text(
                     'Playlist',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 200),
-                    child: IconButton(
-                        onPressed: () {
-                          newplaylist(context, formkey);
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white38,
-                          size: 40,
-                        )),
-                  )
+                  SizedBox(
+                    width: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? MediaQuery.of(context).size.width *
+                            0.55 // Portrait width
+                        : MediaQuery.of(context).size.width *
+                            0.75, // Landscape width
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        newplaylist(context, formkey);
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                        color: Colors.white38,
+                        size: 40,
+                      ))
                 ],
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.03,
+                      right: MediaQuery.of(context).size.width * 0.03),
                   child: SizedBox(
                     width: double.infinity,
                     child: ValueListenableBuilder(
@@ -74,8 +81,7 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                       builder: (BuildContext context, palylistNameList,
                           Widget? child) {
                         if (palylistNameList.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 300, left: 120),
+                          return const Center(
                             child: Text(
                               'Add playlist',
                               style: TextStyle(
@@ -116,7 +122,9 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                                   ],
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 20),
+                                  padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.02),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         image: const DecorationImage(
@@ -165,6 +173,11 @@ class _PlaylistwidgetState extends State<Playlistwidget> {
                                               255, 255, 255, 255),
                                         ),
                                       ),
+                                      trailing: const Icon(
+                                        Icons.compare_arrows,
+                                        size: 30,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -210,9 +223,7 @@ Future<dynamic> editPlaylistName(
                 fontWeight: FontWeight.w600),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 0.02 * MediaQuery.of(context).size.height),
         SimpleDialogOption(
           child: Form(
             key: _formKey,
@@ -244,9 +255,7 @@ Future<dynamic> editPlaylistName(
             ),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 0.02 * MediaQuery.of(context).size.height),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -362,9 +371,7 @@ Future newplaylist(BuildContext context, formKey) {
                 fontWeight: FontWeight.w600),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 0.02 * MediaQuery.of(context).size.height),
         SimpleDialogOption(
           child: Form(
             key: formKey,
@@ -396,9 +403,7 @@ Future newplaylist(BuildContext context, formKey) {
             ),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 0.02 * MediaQuery.of(context).size.height),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

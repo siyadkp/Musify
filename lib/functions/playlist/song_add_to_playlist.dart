@@ -36,6 +36,7 @@ class PlaylistSongDB {
         playlistResult.add(element.song);
       }
     }
+    playlistSongsNotifer.notifyListeners();
   }
 
   static playlisSongDelete(String playlistName, songIndex) {
@@ -44,8 +45,8 @@ class PlaylistSongDB {
   }
 
   static editPlaylist(newPlaylistName, playlistIndex, oldName) {
-    List<Playermodel> PlaylistValue = playlistSongDb.values.toList();
-    for (var element in PlaylistValue) {
+    List<Playermodel> playlistValue = playlistSongDb.values.toList();
+    for (var element in playlistValue) {
       if (element.playlistName == oldName) {
         Playermodel value = Playermodel(
             index: playlistIndex,

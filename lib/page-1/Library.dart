@@ -11,9 +11,8 @@ class LibraryPage extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     return Scaffold(
       body: SizedBox(
-        // playlist4VN (2:68)
         width: double.infinity,
-        height: 800 * fem,
+        height: MediaQuery.of(context).size.height,
         child: DecoratedBox(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -22,72 +21,90 @@ class LibraryPage extends StatelessWidget {
             ),
           ),
           child: SafeArea(
-            child: Column(children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  'Library',
-                  style: TextStyle(color: Colors.white, fontSize: 30),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10 * fem, vertical: 10 * fem),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        'Library',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize:
+                                33, // adjust font size based on device width
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(top: 30),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: ListTile(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => const MostlyScreen()))),
-                        leading: Image.asset(
-                          'assets/page-1/images/pexels-photo-462510.jpeg',
-                          width: 80,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        title: const Text(
-                          'Mostly played',
-                          style: TextStyle(
-                              color: Color.fromARGB(206, 255, 255, 255),
-                              fontSize: 20),
+                Expanded(
+                  child: ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 10 * fem),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20 * fem),
+                        child: ListTile(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const MostlyScreen()))),
+                          leading: Image.asset(
+                            'assets/page-1/images/pexels-photo-462510.jpeg',
+                            width:
+                                92, // adjust image width based on device width
+                            height:
+                                100, // adjust image height based on device width
+                            fit: BoxFit.cover,
+                          ),
+                          title: const Text(
+                            'Mostly played',
+                            style: TextStyle(
+                                color: Color.fromARGB(206, 255, 255, 255),
+                                fontSize:
+                                    21, // adjust font size based on device width
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: ListTile(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) =>
-                                    const Playlistwidget()))),
-                        leading: SizedBox(
-                          width: 80,
-                          height: 100,
-                          child: SizedBox(
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20 * fem),
+                        child: ListTile(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const Playlistwidget()))),
+                          leading: SizedBox(
+                            width:
+                                92, // adjust image width based on device width
+                            height: 100 *
+                                fem, // adjust image height based on device width
                             child: Image.asset(
                               'assets/page-1/images/pexels-photo-3756943.jpeg',
                               fit: BoxFit.cover,
                             ),
                           ),
-                        ),
-                        title: const Text(
-                          'Playlist',
-                          style: TextStyle(
-                              color: Color.fromARGB(206, 255, 255, 255),
-                              fontSize: 20),
+                          title: const Text(
+                            'Playlist',
+                            style: TextStyle(
+                                color: Color.fromARGB(206, 255, 255, 255),
+                                fontSize:
+                                    21, // adjust font size based on device width
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              )
-            ]),
+              ],
+            ),
           ),
         ),
       ),
