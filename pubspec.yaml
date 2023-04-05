@@ -81,13 +81,10 @@ flutter:
     - assets/page-1/images/pexels-photo-3756766.jpeg
     - assets/page-1/images/favorite.jpg
     - assets/page-1/images/playlist.jpg
-<<<<<<< HEAD
     - assets/page-1/images/pexels-photo-3756943.jpeg
     - assets/page-1/images/pexels-photo-462510.jpeg
     - assets/page-1/images/MusifyIcon.png
-    
-=======
->>>>>>> origin/main
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
