@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:myapp/controller/provider/fav_provider/fav_povider.dart';
+import 'package:myapp/controller/provider/mostly_played_provider/mostly_played_provider.dart';
+import 'package:myapp/controller/provider/play_now/play_now.dart';
+import 'package:myapp/controller/provider/play_now/player_controller_provider.dart';
+import 'package:myapp/controller/provider/playlist_provider/playlist_all_songs.dart';
+import 'package:myapp/controller/provider/playlist_provider/playlist_provider.dart';
+import 'package:myapp/controller/provider/recently_play/recently_play.dart';
+import 'package:myapp/controller/provider/search_provider/search_provider.dart';
 import 'package:myapp/model/model.dart';
-
-import 'package:myapp/page-1/splash.dart';
-import 'package:myapp/provider/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'controller/provider/provider.dart';
+import 'view/pages/splash/splash.dart';
 
 Future<void> main() async {
+  SplashPage splashPage = const SplashPage();
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
@@ -36,13 +44,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => FavNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PlaylistNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PlaylistAllSongsDisplayNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MostlyNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SearchNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => RecentlyPlayedNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PlayNowNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PlayerControllerNotifier(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Flutter',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const Scaffold(body: SplashPage()),
       ),
-      home: const Scaffold(body: SplashPage()),
     );
   }
 }
