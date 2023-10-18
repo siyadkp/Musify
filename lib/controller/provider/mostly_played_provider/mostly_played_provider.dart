@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:on_audio_query/on_audio_query.dart';
-
 import '../../../model/model.dart';
 import '../../functions/allsong_db_functions.dart';
 

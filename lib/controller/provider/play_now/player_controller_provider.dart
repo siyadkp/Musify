@@ -1,18 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:myapp/view/pages/playnow/playnow.dart';
-import '../../../view/pages/playnow/widget/slider.dart';
 import '../../get_allsongs_controler.dart';
-import 'play_now.dart';
-
-// Duration duration = const Duration();
-// Duration position = const Duration();
 
 class PlayerControllerNotifier with ChangeNotifier {
-  late StreamSubscription<Duration> _positionSubscription;
-
   int large = 0;
   bool firstsong = false;
   bool lastsong = false;
@@ -30,12 +21,6 @@ class PlayerControllerNotifier with ChangeNotifier {
         : Getallsongs.audioPlayer.setLoopMode(LoopMode.one);
     notifyListeners();
   }
-
-  // nextSong() {
-  //   if (Getallsongs.audioPlayer.hasPrevious) {
-  //     Getallsongs.audioPlayer.seekToPrevious();
-  //   }
-  // }
 
   seekToNext() {
     try {

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/controller/functions/allsong_db_functions.dart';
-import 'package:myapp/model/model.dart';
 import 'package:myapp/view/allmusic/allmusiclist_tile.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controller/provider/search_provider/search_provider.dart';
 
 class SearchPage extends StatelessWidget {
   SearchPage({super.key});
 
-  TextEditingController _textControler = TextEditingController();
+  final TextEditingController _textControler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final _searchNotifier = Provider.of<SearchNotifier>(context, listen: false);
+    final searchNotifier = Provider.of<SearchNotifier>(context, listen: false);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -56,7 +53,7 @@ class SearchPage extends StatelessWidget {
                             fontSize: 18),
                         controller: _textControler,
                         textAlign: TextAlign.left,
-                        onChanged: (value) => _searchNotifier
+                        onChanged: (value) => searchNotifier
                             .searchedSongsFetching(value.toLowerCase()),
                         decoration: InputDecoration(
                           hintText: 'What do you want to listen to?',

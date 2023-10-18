@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/controller/provider/play_now/player_controller_provider.dart';
 import 'package:provider/provider.dart';

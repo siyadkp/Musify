@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:myapp/model/model.dart';
 import 'package:myapp/view/allmusic/allmusic.dart';
 
-import '../all_songs_fetching_provider/all_songs_fetching_provider.dart';
-
 class SearchNotifier with ChangeNotifier {
   SearchNotifier() {
     searchResult.addAll(allsongInMap.values);

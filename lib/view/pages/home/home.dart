@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myapp/controller/functions/allsong_db_functions.dart';
 import 'package:myapp/controller/get_allsongs_controler.dart';
-import 'package:myapp/model/model.dart';
-import 'package:myapp/view/allmusic/allmusiclist_tile.dart';
 import 'package:myapp/view/pages/recentlyplayed/recently_screen.dart';
 import 'package:myapp/view/pages/widget/miniplayer.dart';
-
-import '../../../controller/provider/all_songs_fetching_provider/all_songs_fetching_provider.dart';
 import '../../allmusic/allmusic.dart';
 import '../settings/settings_screen.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
-  bool a = false;
-  // AllsongsWidget allsongsWidget = AllsongsWidget();
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final allsongDb = Hive.box<SongDbModel>('songs');
-  //   allsongDb.clear();
-  // }
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

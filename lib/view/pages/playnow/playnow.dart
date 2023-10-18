@@ -1,13 +1,10 @@
 // ignore: must_be_immutable
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/controller/provider/fav_provider/fav_povider.dart';
 import 'package:myapp/controller/provider/play_now/player_controller_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controller/functions/allsong_db_functions.dart';
 import '../../../controller/get_allsongs_controler.dart';
 import '../../../model/model.dart';

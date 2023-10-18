@@ -5,33 +5,17 @@ import 'package:myapp/controller/provider/play_now/player_controller_provider.da
 import 'package:myapp/controller/provider/recently_play/recently_play.dart';
 import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
-
 import '../playnow/playnow.dart';
 
 class MiniPlayer extends StatelessWidget {
   MiniPlayer({
     Key? key,
   }) : super(key: key);
-  RecentlyPlayedNotifier recentlyPlayedNotifier = RecentlyPlayedNotifier();
-
-  @override
-  // void initState() {
-  //   Getallsongs.audioPlayer.currentIndexStream.listen((index) {
-  //     if (index != null && mounted) {
-  //       setState(() {
-  //         widget.currentIndex = index;
-  //         index == 0 ? firstSong = true : firstSong = false;
-  //       });
-  //     }
-  //   });
-
-  //   super.initState();
-  // }
+  final RecentlyPlayedNotifier recentlyPlayedNotifier =
+      RecentlyPlayedNotifier();
 
   @override
   Widget build(BuildContext context) {
-    PlayerControllerNotifier _playerControllerNotifier =
-        PlayerControllerNotifier();
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
@@ -187,11 +171,4 @@ class MiniPlayer extends StatelessWidget {
       }),
     );
   }
-
-//   int currentIndex = 0;
-// }
-
-// bool firstSong = false;
-
-// bool isPlaying = false;
 }

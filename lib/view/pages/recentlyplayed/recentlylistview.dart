@@ -69,7 +69,7 @@ class RecentlyPlayed extends StatelessWidget {
                     style: const TextStyle(
                         color: Color.fromARGB(208, 255, 255, 255))),
                 subtitle: Text(
-                  '${recent[index].artist}',
+                  recent[index].artist,
                   style: const TextStyle(color: Colors.white54),
                   maxLines: 1,
                 ),

@@ -4,7 +4,6 @@ import 'package:myapp/controller/get_allsongs_controler.dart';
 import 'package:myapp/controller/provider/play_now/player_controller_provider.dart';
 import 'package:myapp/model/model.dart';
 import 'package:myapp/view/pages/playnow/playnow.dart';
-import 'package:myapp/view/pages/widget/miniplayer.dart';
 import 'package:provider/provider.dart';
 
 class Playercontroler extends StatelessWidget {
